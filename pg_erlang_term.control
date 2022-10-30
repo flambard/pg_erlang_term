@@ -1,0 +1,4 @@
+# pg_erlang_term extension
+comment = 'erlang_term datatype'
+default_version = '0.0.1'
+relocatable = true
