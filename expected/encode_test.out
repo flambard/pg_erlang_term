@@ -1,5 +1,3 @@
-CREATE EXTENSION IF NOT EXISTS pg_erlang_term;
-NOTICE:  extension "pg_erlang_term" already exists, skipping
 select erlang_term_encode('[]');
  erlang_term_encode 
 --------------------

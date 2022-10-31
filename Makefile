@@ -1,6 +1,6 @@
 EXTENSION = pg_erlang_term
 DATA = pg_erlang_term--0.0.1.sql
-REGRESS = decode_test encode_test
+REGRESS = 00_create_extension decode_test encode_test
 MODULES = pg_erlang_term
 PG_LDFLAGS = -lei
 
