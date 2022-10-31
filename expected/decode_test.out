@@ -1,7 +1,18 @@
-select erlang_term_decode('\x836a')
--- select erlang_term_decode('\x8383770665726c616e67');
+select erlang_term_decode('\x836a');
  erlang_term_decode 
 --------------------
  []
+(1 row)
+
+select erlang_term_decode('\x83770665726c616e67');
+ erlang_term_decode 
+--------------------
+ erlang
+(1 row)
+
+select erlang_term_decode('\x836D0000000642494E415259');
+   erlang_term_decode    
+-------------------------
+ #Bin<66,73,78,65,82,89>
 (1 row)
 
