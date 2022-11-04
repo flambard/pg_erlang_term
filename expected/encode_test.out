@@ -1,12 +1,12 @@
 select erlang_term_encode('[]');
  erlang_term_encode 
 --------------------
- \x83836a
+ \x836a
 (1 row)
 
 select erlang_term_encode('erlang');
-   erlang_term_encode   
-------------------------
- \x8383770665726c616e67
+  erlang_term_encode  
+----------------------
+ \x83770665726c616e67
 (1 row)
 

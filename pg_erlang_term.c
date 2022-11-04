@@ -20,7 +20,7 @@ Datum erlang_term_encode(PG_FUNCTION_ARGS)
     int32 destination_size;
     ei_x_buff buf;
 
-    ei_x_new_with_version(&buf);
+    ei_x_new(&buf);
 
     if (0 != ei_x_format(&buf, VARDATA(source)))
     {
