@@ -1,6 +1,7 @@
 #include "postgres.h"
 #include "fmgr.h"
 #include "utils/builtins.h"
+#include "lib/stringinfo.h"
 #include "ei.h"
 
 PG_MODULE_MAGIC;
@@ -36,6 +37,37 @@ PG_FUNCTION_INFO_V1(erlang_term_decode);
 Datum erlang_term_decode(PG_FUNCTION_ARGS)
 {
     PG_RETURN_TEXT_P(cstring_to_text(erlang_term_binary_to_string(PG_GETARG_BYTEA_PP(0))));
+}
+
+PG_FUNCTION_INFO_V1(erlang_term_receive);
+Datum erlang_term_receive(PG_FUNCTION_ARGS)
+{
+    StringInfo buff = (StringInfo)PG_GETARG_POINTER(0);
+
+    bytea *output;
+    int total_size;
+    int index = 0;
+    int result = ei_skip_term(buff->data, &index);
+
+    if (result != 0)
+    {
+        ereport(ERROR,
+                (errcode(ERRCODE_INVALID_BINARY_REPRESENTATION),
+                 errmsg("invalid binary erlang term")));
+    }
+
+    total_size = index + VARHDRSZ;
+    output = (bytea *)palloc(total_size);
+    SET_VARSIZE(output, total_size);
+    memcpy(VARDATA(output), buff->data, index);
+
+    PG_RETURN_BYTEA_P(output);
+}
+
+PG_FUNCTION_INFO_V1(erlang_term_send);
+Datum erlang_term_send(PG_FUNCTION_ARGS)
+{
+    PG_RETURN_BYTEA_P(PG_GETARG_BYTEA_P(0));
 }
 
 ///////////
