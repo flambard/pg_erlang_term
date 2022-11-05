@@ -1,0 +1,12 @@
+CREATE TABLE slask (id serial, term erlang_term);
+INSERT INTO slask (term)
+VALUES ('[]'), ('erlang'), ('{tusan, ["vad", "fin" | "t"]}');
+SELECT *
+FROM slask;
+ id |             term             
+----+------------------------------
+  1 | []
+  2 | erlang
+  3 | {tusan, ["vad", "fin", "t"]}
+(3 rows)
+
