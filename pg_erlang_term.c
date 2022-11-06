@@ -47,9 +47,16 @@ Datum erlang_term_receive(PG_FUNCTION_ARGS)
     bytea *output;
     int total_size;
     int index = 0;
-    int result = ei_skip_term(buff->data, &index);
+    int version;
 
-    if (result != 0)
+    if (0 != ei_decode_version(buff->data, &index, &version))
+    {
+        ereport(ERROR,
+                (errcode(ERRCODE_INVALID_BINARY_REPRESENTATION),
+                 errmsg("failed to decode version byte")));
+    }
+
+    if (0 != ei_skip_term(buff->data, &index))
     {
         ereport(ERROR,
                 (errcode(ERRCODE_INVALID_BINARY_REPRESENTATION),
@@ -57,7 +64,7 @@ Datum erlang_term_receive(PG_FUNCTION_ARGS)
     }
 
     total_size = index + VARHDRSZ;
-    output = (bytea *)palloc(total_size);
+    output = (bytea *)palloc0(total_size);
     SET_VARSIZE(output, total_size);
     memcpy(VARDATA(output), buff->data, index);
 
