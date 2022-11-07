@@ -2,6 +2,7 @@
 #include "fmgr.h"
 #include "utils/builtins.h"
 #include "lib/stringinfo.h"
+#include "libpq/pqformat.h"
 #include "ei.h"
 
 PG_MODULE_MAGIC;
@@ -48,15 +49,16 @@ Datum erlang_term_receive(PG_FUNCTION_ARGS)
     int total_size;
     int index = 0;
     int version;
+    const char *bin = pq_getmsgbytes(buff, buff->len);
 
-    if (0 != ei_decode_version(buff->data, &index, &version))
+    if (0 != ei_decode_version(bin, &index, &version))
     {
         ereport(ERROR,
                 (errcode(ERRCODE_INVALID_BINARY_REPRESENTATION),
                  errmsg("failed to decode version byte")));
     }
 
-    if (0 != ei_skip_term(buff->data, &index))
+    if (0 != ei_skip_term(bin, &index))
     {
         ereport(ERROR,
                 (errcode(ERRCODE_INVALID_BINARY_REPRESENTATION),
@@ -66,7 +68,7 @@ Datum erlang_term_receive(PG_FUNCTION_ARGS)
     total_size = index + VARHDRSZ;
     output = (bytea *)palloc0(total_size);
     SET_VARSIZE(output, total_size);
-    memcpy(VARDATA(output), buff->data, index);
+    memcpy(VARDATA(output), bin, index);
 
     PG_RETURN_BYTEA_P(output);
 }
