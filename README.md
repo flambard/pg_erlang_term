@@ -20,6 +20,11 @@ and optionally:
 $ make installcheck
 ```
 
+and then in PostgreSQL:
+```sql
+CREATE EXTENSION pg_erlang_term;
+```
+
 Limitations
 -----------
 
